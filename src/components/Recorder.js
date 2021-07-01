@@ -215,7 +215,7 @@ class Recorder extends Component {
                   </div>
                   {!recording ? (
                     <p className={styles.help}>
-                      {t("Press the microphone to record")}
+                      {this.t("Press the microphone to record")}
                     </p>
                   ) : null}
                 </div>
