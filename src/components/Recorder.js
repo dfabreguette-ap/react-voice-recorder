@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import microphone from './../imgs/microphone.svg';
-import stopIcon from './../imgs/stop.png';
-import pauseIcons from './../imgs/pause.png';
-import playIcons from './../imgs/play-button.png';
-import closeIcons from './../imgs/close.png';
-import styles from '../styles.module.css';
+import microphone from "./../imgs/microphone.svg";
+import stopIcon from "./../imgs/stop.png";
+import pauseIcons from "./../imgs/pause.png";
+import playIcons from "./../imgs/play-button.png";
+import closeIcons from "./../imgs/close.png";
+import styles from "../styles.module.css";
 const audioType = "audio/*";
 
 class Recorder extends Component {
@@ -16,11 +16,15 @@ class Recorder extends Component {
       recording: false,
       medianotFound: false,
       audios: [],
-      audioBlob: null
+      audioBlob: null,
     };
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
+  }
+
+  t(translateKey) {
+    return this.props.t(translateKey);
   }
 
   handleAudioPause(e) {
@@ -47,7 +51,7 @@ class Recorder extends Component {
     let seconds = this.state.seconds + 1;
     this.setState({
       time: this.secondsToTime(seconds),
-      seconds: seconds
+      seconds: seconds,
     });
   }
 
@@ -63,7 +67,7 @@ class Recorder extends Component {
     let obj = {
       h: hours,
       m: minutes,
-      s: seconds
+      s: seconds,
     };
     return obj;
   }
@@ -76,13 +80,15 @@ class Recorder extends Component {
       navigator.msGetUserMedia;
     if (navigator.mediaDevices) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      if(this.props.mimeTypeToUseWhenRecording) {
-        this.mediaRecorder = new MediaRecorder(stream, { mimeType: this.props.mimeTypeToUseWhenRecording });
+      if (this.props.mimeTypeToUseWhenRecording) {
+        this.mediaRecorder = new MediaRecorder(stream, {
+          mimeType: this.props.mimeTypeToUseWhenRecording,
+        });
       } else {
-        this.mediaRecorder = new MediaRecorder(stream); 
+        this.mediaRecorder = new MediaRecorder(stream);
       }
       this.chunks = [];
-      this.mediaRecorder.ondataavailable = e => {
+      this.mediaRecorder.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) {
           this.chunks.push(e.data);
         }
@@ -111,7 +117,7 @@ class Recorder extends Component {
     // stop the recorder
     this.mediaRecorder.stop();
     // say that we're not recording
-    this.setState({ recording: false, pauseRecord: false, });
+    this.setState({ recording: false, pauseRecord: false });
     // save the video to memory
     this.saveAudio();
   }
@@ -120,18 +126,19 @@ class Recorder extends Component {
     if (this.state.recording) {
       this.stopRecording(e);
     }
-    this.setState({
-      time: {},
-      seconds: 0,
-      recording: false,
-      medianotFound: false,
-      audios: [],
-      audioBlob: null
-    }, () => {
-
-      this.props.handleReset(this.state);
-    });
-
+    this.setState(
+      {
+        time: {},
+        seconds: 0,
+        recording: false,
+        medianotFound: false,
+        audios: [],
+        audioBlob: null,
+      },
+      () => {
+        this.props.handleReset(this.state);
+      }
+    );
   }
 
   saveAudio() {
@@ -146,7 +153,7 @@ class Recorder extends Component {
       url: audioURL,
       blob: blob,
       chunks: this.chunks,
-      duration: this.state.time
+      duration: this.state.time,
     });
   }
 
@@ -157,14 +164,14 @@ class Recorder extends Component {
       <div className={styles.recorder_library_box}>
         <div className={styles.recorder_box}>
           <div className={styles.recorder_box_inner}>
-            {!this.props.hideHeader ?
+            {!this.props.hideHeader ? (
               <div className={styles.reco_header}>
                 <h2 className={styles.h2}>{title}</h2>
                 <span className={styles.close_icons}>
-
                   {/* <img src={closeIcons} width={20} height={20} alt="Close icons" /> */}
                 </span>
-              </div> : null}
+              </div>
+            ) : null}
             {!medianotFound ? (
               <div className={styles.record_section}>
                 <div className={styles.btn_wrapper}>
@@ -207,58 +214,69 @@ class Recorder extends Component {
                     </span>
                   </div>
                   {!recording ? (
-                    <p className={styles.help}>Press the microphone to record</p>
+                    <p className={styles.help}>
+                      {t("Press the microphone to record")}
+                    </p>
                   ) : null}
                 </div>
                 {!recording ? (
                   <a
-                    onClick={e => this.startRecording(e)}
+                    onClick={(e) => this.startRecording(e)}
                     href=" #"
                     className={styles.mic_icon}
                   >
                     {/* <img src={microphone} width={30} height={30} alt="Microphone icons" /> */}
                     <span className={styles.microphone_icon_sec}>
-                      <svg className={styles.mic_icon_svg}  version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1000 1000" enableBackground="new 0 0 1000 1000" >
+                      <svg
+                        className={styles.mic_icon_svg}
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 1000 1000"
+                        enableBackground="new 0 0 1000 1000"
+                      >
                         <g>
                           <path d="M500,683.8c84.6,0,153.1-68.6,153.1-153.1V163.1C653.1,78.6,584.6,10,500,10c-84.6,0-153.1,68.6-153.1,153.1v367.5C346.9,615.2,415.4,683.8,500,683.8z M714.4,438.8v91.9C714.4,649,618.4,745,500,745c-118.4,0-214.4-96-214.4-214.4v-91.9h-61.3v91.9c0,141.9,107.2,258.7,245,273.9v124.2H346.9V990h306.3v-61.3H530.6V804.5c137.8-15.2,245-132.1,245-273.9v-91.9H714.4z" />
                         </g>
                       </svg>
-
                     </span>
                   </a>
                 ) : (
-                    <div className={styles.record_controller}>
-                      <a
-                        onClick={e => this.stopRecording(e)}
-                        href=" #"
-                        className={`${styles.icons} ${styles.stop}`}
-                      >
-                        <span className={styles.stop_icon}></span>
-                        {/* <img src={stopIcon} width={20} height={20} alt="Stop icons" /> */}
+                  <div className={styles.record_controller}>
+                    <a
+                      onClick={(e) => this.stopRecording(e)}
+                      href=" #"
+                      className={`${styles.icons} ${styles.stop}`}
+                    >
+                      <span className={styles.stop_icon}></span>
+                      {/* <img src={stopIcon} width={20} height={20} alt="Stop icons" /> */}
 
-                        {/* <span className={`${styles.icons} ${styles.FaStop}`}></span> */}
-                      </a>
-                      <a
-                        onClick={
-                          !pauseRecord
-                            ? e => this.handleAudioPause(e)
-                            : e => this.handleAudioStart(e)
-                        }
-                        href=" #"
-                        className={`${styles.icons} ${styles.pause}`}
-                      >
-                        {pauseRecord ?
-                          <span className={styles.play_icons}></span> :
-                          <span className={styles.pause_icons}></span>}
-                      </a>
-                    </div>
-                  )}
+                      {/* <span className={`${styles.icons} ${styles.FaStop}`}></span> */}
+                    </a>
+                    <a
+                      onClick={
+                        !pauseRecord
+                          ? (e) => this.handleAudioPause(e)
+                          : (e) => this.handleAudioStart(e)
+                      }
+                      href=" #"
+                      className={`${styles.icons} ${styles.pause}`}
+                    >
+                      {pauseRecord ? (
+                        <span className={styles.play_icons}></span>
+                      ) : (
+                        <span className={styles.pause_icons}></span>
+                      )}
+                    </a>
+                  </div>
+                )}
               </div>
             ) : (
-                <p style={{ color: "#fff", marginTop: 30, fontSize: 25 }}>
-                  Seems the site is Non-SSL
-                </p>
-              )}
+              <p style={{ color: "#fff", marginTop: 30, fontSize: 25 }}>
+                Seems the site is Non-SSL
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -270,5 +288,6 @@ export default Recorder;
 
 Recorder.defaultProps = {
   hideHeader: false,
-  mimeTypeToUseWhenRecording:null
-}
+  mimeTypeToUseWhenRecording: null,
+  t: (translateKey) => translateKey,
+};
