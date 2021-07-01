@@ -27,6 +27,13 @@ class Recorder extends Component {
     return this.props.t(translateKey);
   }
 
+  styleProperties() {
+    const cssStyles = {
+      "--primary-color": `${this.props.primaryColor}`,
+    };
+    return cssStyles;
+  }
+
   handleAudioPause(e) {
     e.preventDefault();
     clearInterval(this.timer);
@@ -161,7 +168,10 @@ class Recorder extends Component {
     const { recording, audios, time, medianotFound, pauseRecord } = this.state;
     const { showUIAudio, title, audioURL } = this.props;
     return (
-      <div className={styles.recorder_library_box}>
+      <div
+        className={styles.recorder_library_box}
+        style={this.styleProperties()}
+      >
         <div className={styles.recorder_box}>
           <div className={styles.recorder_box_inner}>
             {!this.props.hideHeader ? (
@@ -290,4 +300,5 @@ Recorder.defaultProps = {
   hideHeader: false,
   mimeTypeToUseWhenRecording: null,
   t: (translateKey) => translateKey,
+  primaryColor: "red",
 };
