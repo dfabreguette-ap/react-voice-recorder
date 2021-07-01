@@ -182,13 +182,13 @@ class Recorder extends Component {
                     className={`${styles.btn} ${styles.upload_btn}`}
                     disabled={this.props.uploadButtonDisabled}
                   >
-                    Upload
+                    {this.t("Upload")}
                   </button>
                   <button
                     onClick={(e) => this.handleReset(e)}
                     className={`${styles.btn} ${styles.clear_btn}`}
                   >
-                    Clear
+                    {this.t("Clear")}
                   </button>
                 </div>
                 <div className={styles.duration_section}>
@@ -274,7 +274,7 @@ class Recorder extends Component {
               </div>
             ) : (
               <p style={{ color: "#fff", marginTop: 30, fontSize: 25 }}>
-                Seems the site is Non-SSL
+                {this.t("Seems the site is Non-SSL")}
               </p>
             )}
           </div>
