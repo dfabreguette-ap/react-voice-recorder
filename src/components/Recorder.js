@@ -17,6 +17,7 @@ class Recorder extends Component {
       medianotFound: false,
       audios: [],
       audioBlob: null,
+      pauseRecord: false,
     };
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
@@ -119,7 +120,7 @@ class Recorder extends Component {
 
   stopRecording(e) {
     clearInterval(this.timer);
-    this.setState({ time: {} });
+    this.setState({ time: {}, seconds: 0 });
     e.preventDefault();
     // stop the recorder
     this.mediaRecorder.stop();
@@ -185,15 +186,17 @@ class Recorder extends Component {
             {!medianotFound ? (
               <div className={styles.record_section}>
                 <div className={styles.btn_wrapper}>
-                  <button
-                    onClick={() =>
-                      this.props.handleAudioUpload(this.state.audioBlob)
-                    }
-                    className={`${styles.btn} ${styles.upload_btn}`}
-                    disabled={this.props.uploadButtonDisabled}
-                  >
-                    {this.t("Upload")}
-                  </button>
+                  {!this.props.hideUploadBtn && (
+                    <button
+                      onClick={() =>
+                        this.props.handleAudioUpload(this.state.audioBlob)
+                      }
+                      className={`${styles.btn} ${styles.upload_btn}`}
+                      disabled={this.props.uploadButtonDisabled}
+                    >
+                      {this.t("Upload")}
+                    </button>
+                  )}
                   <button
                     onClick={(e) => this.handleReset(e)}
                     className={`${styles.btn} ${styles.clear_btn}`}
@@ -203,7 +206,7 @@ class Recorder extends Component {
                 </div>
                 <div className={styles.duration_section}>
                   <div className={styles.audio_section}>
-                    {audioURL !== null && showUIAudio ? (
+                    {audioURL !== null && showUIAudio && !recording ? (
                       <audio controls>
                         <source src={audios[0]} type="audio/ogg" />
                         <source src={audios[0]} type="audio/mpeg" />
@@ -301,4 +304,5 @@ Recorder.defaultProps = {
   mimeTypeToUseWhenRecording: null,
   t: (translateKey) => translateKey,
   primaryColor: "red",
+  hideUploadBtn: false,
 };
