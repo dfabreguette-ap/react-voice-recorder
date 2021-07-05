@@ -5,7 +5,7 @@ import pauseIcons from "./../imgs/pause.png";
 import playIcons from "./../imgs/play-button.png";
 import closeIcons from "./../imgs/close.png";
 import styles from "../styles.module.css";
-const audioType = "audio/*";
+const audioType = "audio/mp3";
 
 class Recorder extends Component {
   constructor(props) {
@@ -109,6 +109,11 @@ class Recorder extends Component {
 
   startRecording(e) {
     e.preventDefault();
+
+    if (!this.mediaRecorder) {
+      console.warn("MediaRecorder is not ready yet !");
+      return;
+    }
     // wipe old data chunks
     this.chunks = [];
     // start recorder with 10ms buffer
